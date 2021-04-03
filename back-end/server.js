@@ -66,4 +66,15 @@ app.post('/api/blogPosts', async (req, res) => {
     }
 });
 
+// Read all blog posts
+app.get('/api/blogPosts', async (req, res) => {
+    try {
+        let blogPosts = await BlogPost.find();
+        res.send(blogPosts);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
+
 app.listen(3000, () => console.log('Server listening on port 3000!'));
