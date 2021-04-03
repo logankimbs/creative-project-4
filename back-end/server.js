@@ -53,6 +53,48 @@ app.get('/api/authors', async (req, res) => {
     }
 });
 
+// schema for blog post
+const blogPostSchema = mongoose.Schema({
+    author: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Author'
+    },
+    title: String,
+    content: String,
+    timeStamp: String
+});
+
+// model for blog post
+const BlogPost = mongoose.model('BlogPost', blogPostSchema);
+
+// create blog post
+app.post('/api/blogPost', async (req, res) => {
+    try {
+        const blogPost = new BlogPost({
+            author: "test",
+            title: req.body.title,
+            content: req.body.content,
+            timeStamp: req.body.timeStamp
+        });
+        await blogPost.save();
+        res.send(blogPost);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
+
+// read blog posts
+app.get('/api/blogPosts', async (req, res) => {
+    try {
+        let blogPosts = await BlogPost.find();
+        res.send(blogPosts);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
+
 app.listen(3000, () => console.log('Server listening on port 3000!'));
 
 // notes
