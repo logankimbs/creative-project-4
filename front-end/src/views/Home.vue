@@ -1,16 +1,9 @@
 <template>
-<div class="home">
-    <div class="postcard-wrapper" v-for="blogPost in blogPosts" :key="blogPost.id">
-        <div class="author">{{   blogPost.author   }}</div>
-        <div class="timestamp">{{   blogPost.timeStamp   }}</div>
-        <div class="postcard">
-            <div class="title">{{   blogPost.title   }}</div>
-            <img class="thumbnail" :src="blogPost.path">
-            <p class="content">{{   blogPost.content   }}</p>
+    <div class="home">
+        <div class="authors" v-for="author in authors" :key="author.id">
+            <button>{{   author.name   }}</button>
         </div>
-        <div class="tag">{{   blogPost.tag   }}</div>
     </div>
-</div>
 </template>
 
 <script>
@@ -20,22 +13,22 @@ export default {
     name: 'Home',
     data() {
         return {
-            blogPosts: []
+            authors: []
         }
     },
     created() {
-        this.getBlogPosts();
+        this.getAuthors();
     },
     methods: {
-        async getBlogPosts() {
+        async getAuthors() {
             try {
-                let response = await axios.get(`/api/blogPosts`);
-                this.blogPosts = response.data;
+                let response = await axios.get('/api/authors');
+                this.authors = response.data;
                 return true;
-            } catch (error) {
+            } catch  (error) {
                 console.log(error);
             }
-        },
+        }
     }
 }
 </script>
@@ -90,3 +83,14 @@ p {
     font-weight: 550;
 }
 </style>
+
+<!-- <div class="postcard-wrapper" v-for="blogPost in blogPosts" :key="blogPost.id">
+        <div class="author">{{   blogPost.author   }}</div>
+        <div class="timestamp">{{   blogPost.timeStamp   }}</div>
+        <div class="postcard">
+            <div class="title">{{   blogPost.title   }}</div>
+            <img class="thumbnail" :src="blogPost.path">
+            <p class="content">{{   blogPost.content   }}</p>
+        </div>
+        <div class="tag">{{   blogPost.tag   }}</div>
+    </div> -->
