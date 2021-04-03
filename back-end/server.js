@@ -48,6 +48,7 @@ app.post('/api/photos', upload.single('photo'), async (req, res) => {
     });
 });
 
+// Create blog post
 app.post('/api/blogPosts', async (req, res) => {
     const blogPost = new BlogPost({
         author: req.body.author,
@@ -64,29 +65,5 @@ app.post('/api/blogPosts', async (req, res) => {
         res.sendStatus(500);
     }
 });
-
-// Scheme for tags
-// const tagSchema = new mongoose.Schema({
-//     item: String,
-//     color: String
-// });
-
-// Model for tags
-// const Tag = mongoose.model('Tag', tagSchema);
-
-// Create a tag
-// app.post('/api/tags', async (req, res) => {
-//     const tag = new Tag({
-//         item: req.body.item,
-//         color: req.body.color
-//     });
-//     try {
-//         await tag.save();
-//         res.send(tag);
-//     } catch (error) {
-//         console.log(error);
-//         res.sendStatus(500);
-//     }
-// });
 
 app.listen(3000, () => console.log('Server listening on port 3000!'));
