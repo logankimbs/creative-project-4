@@ -14,6 +14,10 @@
             <form @submit.prevent="createBlog">
                 <input type="text" v-model="blogTitle" placeholder="Title">
                 <br>
+                <input type="text" v-model="blogTag" placeholder="Tag">
+                <br>
+                <input type="file" name="photo" @change="fileChanged">
+                <br>
                 <textarea v-model="blogContent" placeholder="Add content..."></textarea>
                 <br>
                 <button type="submit">Create Blog Post</button>
@@ -32,6 +36,7 @@
 
 <script>
     import axios from 'axios';
+    import moment from 'moment';
 
     export default {
         name: 'Home',
@@ -43,8 +48,10 @@
                 authorName: '',
                 blogs: [],
                 blogTitle: '',
+                blogTag: '',
                 blogContent: '',
-                show: 'all'
+                show: 'all',
+                file: null
             }
         },
         
@@ -72,11 +79,21 @@
                 }
             },
 
+            fileChanged(event) {
+                this.file = event.target.files[0];
+            },
+
             async createBlog() {
                 try {
+                    const formData = new FormData();
+                    formData.append('photo', this.file, this.file.name);
+                    let r1 = await axios.post('/api/photos', formData);
                     await axios.post(`/api/authors/${this.author._id}/blogs`, {
                         title: this.blogTitle,
-                        content: this.blogContent
+                        tag: this.blogTag,
+                        path: r1.data.path,
+                        content: this.blogContent,
+                        timeStamp: moment().format('MMMM Do YYYY')
                     });
                     this.title = '';
                     this.content = '';

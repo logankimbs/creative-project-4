@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const multer = require('multer');
 
 const app = express();
 
@@ -51,6 +52,24 @@ app.get('/api/authors', async (req, res) => {
     }
 });
 
+// Configure multer so it will upload to '../front-end/public/images'
+const upload = multer({
+    dest: '../front-end/public/images/',
+    limits: {
+        fileSize: 10000000
+    }
+});
+
+app.post('/api/photos', upload.single('photo'), async (req, res) => {
+    // Just a safety check
+    if (!req.file) {
+        return res.sendStatus(400);
+    }
+    res.send({
+        path: "/images/" + req.file.filename
+    });
+});
+
 // schema for blogs
 const blogSchema = new mongoose.Schema({
     author: {
@@ -58,7 +77,10 @@ const blogSchema = new mongoose.Schema({
         ref: 'Author'
     },
     title: String,
-    content: String
+    tag: String,
+    path: String,
+    content: String,
+    timeStamp: String
 });
 
 // create model for blog
@@ -75,7 +97,10 @@ app.post('/api/authors/:authorID/blogs', async (req, res) => {
         let blog = new Blog({
             author: author,
             title: req.body.title,
-            content: req.body.content
+            tag: req.body.tag,
+            path: req.body.path,
+            content: req.body.content,
+            timeStamp: req.body.timeStamp
         });
         await blog.save();
         res.send(blog);
