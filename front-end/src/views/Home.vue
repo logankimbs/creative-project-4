@@ -1,7 +1,7 @@
 <template>
     <div class="home">
         <div id="projects">
-            <button :class="{selected: active(author)}" v-for="author in authors" :key="author.id" @click="selectAuthor(author)">{{author.name}}</button>
+            <button type="button" class="btn btn-outline-secondary" :class="{selected: active(author)}" v-for="author in authors" :key="author.id" @click="selectAuthor(author)">{{author.name}}</button>
         </div>
         <br>
         <div v-if="author">

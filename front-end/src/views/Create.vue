@@ -1,13 +1,13 @@
 <template>
     <div class="create">
         <div id="projects">
-            <button :class="{selected: active(author)}" v-for="author in authors" :key="author.id" @click="selectAuthor(author)">{{author.name}}</button>
+            <button type="button" class="btn btn-outline-secondary" :class="{selected: active(author)}" v-for="author in authors" :key="author.id" @click="selectAuthor(author)">{{author.name}}</button>
         </div>
         <br>
         <form @submit.prevent="createAuthor">
             <input type="text" v-model="authorName">
             <br>
-            <button type="submit">Create Author</button>
+            <button type="submit" class="btn btn-primary">Create Author</button>
         </form>
         <br>
         <div v-if="author">
@@ -20,7 +20,7 @@
                 <br>
                 <textarea v-model="blogContent" placeholder="Add content..."></textarea>
                 <br>
-                <button type="submit">Create Blog Post</button>
+                <button type="submit" class="btn btn-primary">Create Blog Post</button>
             </form>
             <ul>
                 <li v-for="blog in blogs" :key="blog.id">
