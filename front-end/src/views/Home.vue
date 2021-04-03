@@ -24,18 +24,18 @@ export default {
         }
     },
     created() {
-        this.getBlogPosts()
+        this.getBlogPosts();
     },
     methods: {
         async getBlogPosts() {
             try {
-                let response = await axios.get("/api/blogPosts");
+                let response = await axios.get(`/api/blogPosts`);
                 this.blogPosts = response.data;
                 return true;
             } catch (error) {
                 console.log(error);
             }
-        }
+        },
     }
 }
 </script>

@@ -51,7 +51,7 @@ app.post('/api/photos', upload.single('photo'), async (req, res) => {
 
 // Create blog post
 app.post('/api/blogPosts', async (req, res) => {
-    const blogPost = new BlogPost({
+    let blogPost = new BlogPost({
         author: req.body.author,
         title: req.body.title,
         tag: req.body.tag,
