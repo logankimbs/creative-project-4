@@ -1,116 +1,122 @@
 <template>
     <div class="home">
-        <div class="authors" v-for="author in authors" :key="author.id">
-            <button>{{   author.name   }}</button>
-        </div> <br><hr>
-        <div class="blog-posts" v-for="blogPost in blogPosts" :key="blogPost.id">
-            <div class="timestamp">{{   blogPost.timeStamp   }}</div>
-            <div class="postcard">
-                <div class="title">{{   blogPost.title   }}</div>
-                <img class="thumbnail" :src="blogPost.path">
-                <p class="content">{{   blogPost.content   }}</p>
-            </div>
-            <div class="tag">{{   blogPost.tag   }}</div>
+        <div id="projects">
+            <button :class="{selected: active(author)}" v-for="author in authors" :key="author.id" @click="selectAuthor(author)">{{author.name}}</button>
+        </div>
+        <br>
+        <form @submit.prevent="createAuthor">
+            <input type="text" v-model="authorName">
+            <br>
+            <button type="submit">Create Author</button>
+        </form>
+        <br>
+        <div v-if="author">
+            <form @submit.prevent="createBlog">
+                <input type="text" v-model="blogTitle" placeholder="Title">
+                <br>
+                <textarea v-model="blogContent" placeholder="Add content..."></textarea>
+                <br>
+                <button type="submit">Create Blog Post</button>
+            </form>
+
+            <ul>
+                <li v-for="blog in blogs" :key="blog.id">
+                    <label :class="{ blog: true}">
+                        {{ blog.title }}
+                    </label>
+            </li>
+            </ul>
         </div>
     </div>
 </template>
 
 <script>
-import axios from 'axios';
+    import axios from 'axios';
 
-export default {
-    name: 'Home',
-    data() {
-        return {
-            authors: [],
-            blogPosts: []
+    export default {
+        name: 'Home',
+        
+        data() {
+            return {
+                authors: [],
+                author: null,
+                authorName: '',
+                blogs: [],
+                blogTitle: '',
+                blogContent: '',
+                show: 'all'
+            }
+        },
+        
+        created() {
+            this.getAuthors();
+        },
+
+        computed: {
+            activeBlogs() {
+                return this.blogs.filter(blog => {
+                    return blog;
+                });
+            }
+        },
+        
+        methods: {
+            async createAuthor() {
+                try {
+                    await axios.post("/api/authors", {
+                        name: this.authorName
+                    });
+                    await this.getAuthors();
+                } catch (error) {
+                    console.log(error);
+                }
+            },
+
+            async createBlog() {
+                try {
+                    await axios.post(`/api/authors/${this.author._id}/blogs`, {
+                        title: this.blogTitle,
+                        content: this.blogContent
+                    });
+                    this.title = '';
+                    this.content = '';
+                    this.getBlogs();
+                } catch (error) {
+                    console.log(error);
+                }
+            },
+
+            async getAuthors() {
+                try {
+                    const response = await axios.get("/api/authors");
+                    this.authors = response.data;
+                    this.authorName = '';
+                } catch (error) {
+                    console.log(error);
+                }
+            },
+
+            selectAuthor(author) {
+                this.author = author;
+                this.getBlogs();
+            },
+
+            async getBlogs() {
+                try {
+                    const response = await axios.get(`/api/authors/${this.author._id}/blogs`);
+                    this.blogs = response.data;
+                } catch (error) {
+                    console.log(error);
+                }
+            },
+
+            active(author) {
+                return (this.author && author._id === this.author._id);
+            },
+
+            showActive() {
+                this.show = 'active';
+            },
         }
-    },
-    created() {
-        this.getAuthors();
-        this.getBlogPosts();
-    },
-    methods: {
-        async getAuthors() {
-            try {
-                let response = await axios.get('/api/authors');
-                this.authors = response.data;
-                return true;
-            } catch  (error) {
-                console.log(error);
-            }
-        },
-        async getBlogPosts() {
-            try {
-                let response = await axios.get('/api/blogPosts');
-                this.blogPosts = response.data;
-                return true;
-            } catch  (error) {
-                console.log(error);
-            }
-        },
     }
-}
 </script>
-
-<style scoped>
-.postcard-wrapper {
-    margin-bottom: 12px;
-}
-
-.author {
-    margin-bottom: 2px;
-    font-size: medium;
-    font-weight: 450;
-}
-
-.timestamp {
-    font-size: small;
-    font-style: italic;
-}
-
-.postcard {
-    margin-bottom: 8px;
-}
-
-.title {
-    padding: 12px 8px;
-    font-size: large;
-    font-weight: 600;
-}
-
-.thumbnail {
-    width: 304px;
-    height: 304px;
-    object-fit:cover;
-}
-
-.content {
-    padding: 0px 8px;
-}
-
-p {
-    margin-top: 8px;
-    margin-bottom: 0;
-}
-
-.tag {
-    border: 1px solid #2c3e50;
-    border-radius: 14px;
-    display: inline-block;
-    padding: 3px 5px;
-    font-size: small;
-    font-weight: 550;
-}
-</style>
-
-<!-- <div class="postcard-wrapper" v-for="blogPost in blogPosts" :key="blogPost.id">
-        <div class="author">{{   blogPost.author   }}</div>
-        <div class="timestamp">{{   blogPost.timeStamp   }}</div>
-        <div class="postcard">
-            <div class="title">{{   blogPost.title   }}</div>
-            <img class="thumbnail" :src="blogPost.path">
-            <p class="content">{{   blogPost.content   }}</p>
-        </div>
-        <div class="tag">{{   blogPost.tag   }}</div>
-    </div> -->

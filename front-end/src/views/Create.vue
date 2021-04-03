@@ -1,36 +1,44 @@
 <template>
     <div class="create">
         <div class="form">
-            <h2>Create Author:</h2>
-            <input v-model="author"> <br>
-            <button @click="createAuthor">Create</button>
+            <h2>Create Post:</h2>
+            <input v-model="title" placeholder="Title"> <br>
+            <input v-model="author" placeholder="Author"> <br>
+            <input type="file"> <br>
+            <textarea v-model="content"></textarea> <br>
+            <button @click="createPost">Create</button>
         </div> <br><hr>
     </div>
 </template>
 
 <script>
-import axios from 'axios';
+// import axios from 'axios';
 
 export default {
     name: 'Create',
     data() {
         return {
+            title: '',
             author: '',
-            addAuthor: null
+            content: ''
         }
     },
+    created() {
+        // this.getAuthors();
+    },
     methods: {
-        async createAuthor() {
-            try {
-                let response = await axios.post('/api/authors', {
-                    name: this.author
-                });
-                this.addAuthor = response.data;
-            } catch (error) {
-                console.log(error);
-            }
-            this.author = '';
-        }
+        // async createPost() {
+        //     try {
+        //         let 
+        //     } catch (error) {
+        //         console.log(error);
+        //     }
+        //     this.author = '';
+        // }
     }
 }
 </script>
+
+<style scoped>
+
+</style>
