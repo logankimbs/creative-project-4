@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const multer = require('multer');
 
 const app = express();
 
@@ -18,28 +19,74 @@ mongoose.connect('mongodb://localhost:27017/cp4', {
     useUnifiedTopology: true
 });
 
-// Scheme for tags
-const tagSchema = new mongoose.Schema({
-    item: String,
-    color: String
+// Schema for blog post
+const blogPostSchema = new mongoose.Schema({
+    author: String,
+    title: String,
+    tag: String,
+    path: String,
+    content: String
 });
 
-// Model for tags
-const Tag = mongoose.model('Tag', tagSchema);
+// Model for blog post
+const BlogPost = new mongoose.model('BlogPost', blogPostSchema);
 
-// Create a tag
-app.post('/api/tags', async (req, res) => {
-    const tag = new Tag({
-        item: req.body.item,
-        color: req.body.color
+// Upload photo
+const upload = multer({
+    dest: '../front-end/public/images',
+    limits: {
+        fileSize: 10000000
+    }
+});
+
+app.post('/api/photos', upload.single('photo'), async (req, res) => {
+    if (!req.file) {
+        return res.sendStatus(400);
+    }
+    res.send({
+        path: "/images/" + req.file.filename
+    });
+});
+
+app.post('/api/blogPosts', async (req, res) => {
+    const blogPost = new BlogPost({
+        author: req.body.author,
+        title: req.body.title,
+        tag: req.body.tag,
+        path: req.body.path,
+        content: req.body.content
     });
     try {
-        await tag.save();
-        res.send(tag);
+        await blogPost.save();
+        res.send(blogPost);
     } catch (error) {
         console.log(error);
         res.sendStatus(500);
     }
 });
+
+// Scheme for tags
+// const tagSchema = new mongoose.Schema({
+//     item: String,
+//     color: String
+// });
+
+// Model for tags
+// const Tag = mongoose.model('Tag', tagSchema);
+
+// Create a tag
+// app.post('/api/tags', async (req, res) => {
+//     const tag = new Tag({
+//         item: req.body.item,
+//         color: req.body.color
+//     });
+//     try {
+//         await tag.save();
+//         res.send(tag);
+//     } catch (error) {
+//         console.log(error);
+//         res.sendStatus(500);
+//     }
+// });
 
 app.listen(3000, () => console.log('Server listening on port 3000!'));
