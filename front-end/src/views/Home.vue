@@ -2,7 +2,7 @@
 <div class="home">
     <div class="postcard-wrapper" v-for="blogPost in blogPosts" :key="blogPost.id">
         <div class="author">{{   blogPost.author   }}</div>
-        <div class="timestamp">April 1, 2021</div>
+        <div class="timestamp">{{   blogPost.timeStamp   }}</div>
         <div class="postcard">
             <div class="title">{{   blogPost.title   }}</div>
             <img class="thumbnail" :src="blogPost.path">

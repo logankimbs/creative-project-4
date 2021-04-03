@@ -25,7 +25,8 @@ const blogPostSchema = new mongoose.Schema({
     title: String,
     tag: String,
     path: String,
-    content: String
+    content: String,
+    timeStamp: String
 });
 
 // Model for blog post
@@ -55,7 +56,8 @@ app.post('/api/blogPosts', async (req, res) => {
         title: req.body.title,
         tag: req.body.tag,
         path: req.body.path,
-        content: req.body.content
+        content: req.body.content,
+        timeStamp: req.body.timeStamp
     });
     try {
         await blogPost.save();

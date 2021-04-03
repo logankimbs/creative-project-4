@@ -1,26 +1,15 @@
 <template>
     <div class="create">
         <div class="form">
-            <!-- AUTHOR -->
             <label for="author">Author:</label> <br>
             <input v-model="author"> <br><br>
-            
-            <!-- TITLE -->
             <label for="title">Title:</label> <br>
             <input v-model="title"> <br><br>
-            
-            <!-- TAG -->
             <label for="tag">Tag:</label> <br>
             <input v-model="tag"> <br><br>
-            
-            <!-- THUMBNAIL -->
             <label for="photo">Thumbnail:</label> <br>
             <input type="file" name="photo" @change="fileChanged"> <br><br>
-
-            <!-- CONTENT -->
             <textarea v-model="content" placeholder="Add content..." cols="30" rows="10"></textarea> <br>
-
-            <!-- SUBMIT -->
             <button @click="submit">Submit</button>
         </div>
     </div>
@@ -28,6 +17,7 @@
 
 <script>
 import axios from 'axios';
+import moment from 'moment';
 
 export default {
     name: 'Create',
@@ -56,7 +46,8 @@ export default {
                     title: this.title,
                     tag: this.tag,
                     path: response1.data.path,
-                    content: this.content
+                    content: this.content,
+                    timeStamp: moment().format('MMMM Do YYYY')
                 });
                 this.addPost = response2.data;
             } catch (error) {
