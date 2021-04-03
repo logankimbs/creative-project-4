@@ -2,6 +2,15 @@
     <div class="home">
         <div class="authors" v-for="author in authors" :key="author.id">
             <button>{{   author.name   }}</button>
+        </div> <br><hr>
+        <div class="blog-posts" v-for="blogPost in blogPosts" :key="blogPost.id">
+            <div class="timestamp">{{   blogPost.timeStamp   }}</div>
+            <div class="postcard">
+                <div class="title">{{   blogPost.title   }}</div>
+                <img class="thumbnail" :src="blogPost.path">
+                <p class="content">{{   blogPost.content   }}</p>
+            </div>
+            <div class="tag">{{   blogPost.tag   }}</div>
         </div>
     </div>
 </template>
@@ -13,11 +22,13 @@ export default {
     name: 'Home',
     data() {
         return {
-            authors: []
+            authors: [],
+            blogPosts: []
         }
     },
     created() {
         this.getAuthors();
+        this.getBlogPosts();
     },
     methods: {
         async getAuthors() {
@@ -28,7 +39,16 @@ export default {
             } catch  (error) {
                 console.log(error);
             }
-        }
+        },
+        async getBlogPosts() {
+            try {
+                let response = await axios.get('/api/blogPosts');
+                this.blogPosts = response.data;
+                return true;
+            } catch  (error) {
+                console.log(error);
+            }
+        },
     }
 }
 </script>
