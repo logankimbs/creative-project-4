@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const multer = require('multer');
 
+// app uses express
 const app = express();
 
 // parse application/x-www-form-urlencoded
@@ -19,60 +20,33 @@ mongoose.connect('mongodb://localhost:27017/cp4', {
     useUnifiedTopology: true
 });
 
-// Schema for blog post
-const blogPostSchema = new mongoose.Schema({
-    author: String,
-    title: String,
-    tag: String,
-    path: String,
-    content: String,
-    timeStamp: String
+// schema for author
+const authorSchema = mongoose.Schema({
+    name: String
 });
 
-// Model for blog post
-const BlogPost = new mongoose.model('BlogPost', blogPostSchema);
+// model for author
+const Author = mongoose.model('Author', authorSchema);
 
-// Upload photo
-const upload = multer({
-    dest: '../front-end/public/images',
-    limits: {
-        fileSize: 10000000
-    }
-});
-
-app.post('/api/photos', upload.single('photo'), async (req, res) => {
-    if (!req.file) {
-        return res.sendStatus(400);
-    }
-    res.send({
-        path: "/images/" + req.file.filename
-    });
-});
-
-// Create blog post
-app.post('/api/blogPosts', async (req, res) => {
-    let blogPost = new BlogPost({
-        author: req.body.author,
-        title: req.body.title,
-        tag: req.body.tag,
-        path: req.body.path,
-        content: req.body.content,
-        timeStamp: req.body.timeStamp
+// create author
+app.post('/api/authors', async (req, res) => {
+    const author = new Author({
+        name: req.body.name
     });
     try {
-        await blogPost.save();
-        res.send(blogPost);
+        await author.save();
+        res.send(author);
     } catch (error) {
         console.log(error);
         res.sendStatus(500);
     }
 });
 
-// Read all blog posts
-app.get('/api/blogPosts', async (req, res) => {
+// read authors
+app.get('/api/authors', async (req, res) => {
     try {
-        let blogPosts = await BlogPost.find();
-        res.send(blogPosts);
+        let authors = await Author.find();
+        res.send(authors);
     } catch (error) {
         console.log(error);
         res.sendStatus(500);
@@ -80,3 +54,64 @@ app.get('/api/blogPosts', async (req, res) => {
 });
 
 app.listen(3000, () => console.log('Server listening on port 3000!'));
+
+// notes
+// Schema for blog post
+// const blogPostSchema = new mongoose.Schema({
+//     author: String,
+//     title: String,
+//     tag: String,
+//     path: String,
+//     content: String,
+//     timeStamp: String
+// });
+
+// Model for blog post
+// const BlogPost = new mongoose.model('BlogPost', blogPostSchema);
+
+// Upload photo
+// const upload = multer({
+//     dest: '../front-end/public/images',
+//     limits: {
+//         fileSize: 10000000
+//     }
+// });
+
+// app.post('/api/photos', upload.single('photo'), async (req, res) => {
+//     if (!req.file) {
+//         return res.sendStatus(400);
+//     }
+//     res.send({
+//         path: "/images/" + req.file.filename
+//     });
+// });
+
+// Create blog post
+// app.post('/api/blogPosts', async (req, res) => {
+//     let blogPost = new BlogPost({
+//         author: req.body.author,
+//         title: req.body.title,
+//         tag: req.body.tag,
+//         path: req.body.path,
+//         content: req.body.content,
+//         timeStamp: req.body.timeStamp
+//     });
+//     try {
+//         await blogPost.save();
+//         res.send(blogPost);
+//     } catch (error) {
+//         console.log(error);
+//         res.sendStatus(500);
+//     }
+// });
+
+// Read all blog posts
+// app.get('/api/blogPosts', async (req, res) => {
+//     try {
+//         let blogPosts = await BlogPost.find();
+//         res.send(blogPosts);
+//     } catch (error) {
+//         console.log(error);
+//         res.sendStatus(500);
+//     }
+// });
