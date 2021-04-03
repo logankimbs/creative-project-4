@@ -4,32 +4,19 @@
             <button :class="{selected: active(author)}" v-for="author in authors" :key="author.id" @click="selectAuthor(author)">{{author.name}}</button>
         </div>
         <br>
-        <form @submit.prevent="createAuthor">
-            <input type="text" v-model="authorName">
-            <br>
-            <button type="submit">Create Author</button>
-        </form>
-        <br>
         <div v-if="author">
-            <form @submit.prevent="createBlog">
-                <input type="text" v-model="blogTitle" placeholder="Title">
-                <br>
-                <input type="text" v-model="blogTag" placeholder="Tag">
-                <br>
-                <input type="file" name="photo" @change="fileChanged">
-                <br>
-                <textarea v-model="blogContent" placeholder="Add content..."></textarea>
-                <br>
-                <button type="submit">Create Blog Post</button>
-            </form>
-
-            <ul>
-                <li v-for="blog in blogs" :key="blog.id">
-                    <label :class="{ blog: true}">
-                        {{ blog.title }}
-                    </label>
-            </li>
-            </ul>
+            <div v-for="blog in blogs" :key="blog.id">
+                <div class="postcard-wrapper">
+                    <div class="author">{{   blog.author.name   }}</div>
+                    <div class="timestamp">{{   blog.timeStamp   }}</div>
+                    <div class="postcard">
+                        <div class="title">{{   blog.title   }}</div>
+                        <img class="thumbnail" :src="blog.path">
+                        <p class="content">{{   blog.content   }}</p>
+                    </div>
+                    <div class="tag">{{   blog.tag   }}</div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -137,3 +124,62 @@
         }
     }
 </script>
+
+<style scoped>
+/* POSTCARD-WRAPPER */
+.postcard-wrapper {
+    margin-bottom: 12px;
+}
+
+/* AUTHOR */
+.author {
+    margin-bottom: 2px;
+    font-size: medium;
+    font-weight: 450;
+}
+
+/* TIMESTAMP */
+.timestamp {
+    font-size: small;
+    font-style: italic;
+}
+
+/* POSTCARD */
+.postcard {
+    margin-bottom: 8px;
+}
+
+/* TITLE */
+.title {
+    padding: 12px 8px;
+    font-size: large;
+    font-weight: 600;
+}
+
+/* THUMBNAIL */
+.thumbnail {
+    width: 304px;
+    height: 304px;
+    object-fit:cover;
+}
+
+/* CONTENT */
+.content {
+    padding: 0px 8px;
+}
+
+p {
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
+/* TAG */
+.tag {
+    border: 1px solid #2c3e50;
+    border-radius: 14px;
+    display: inline-block;
+    padding: 3px 5px;
+    font-size: small;
+    font-weight: 550;
+}
+</style>
