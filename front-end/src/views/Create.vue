@@ -1,34 +1,50 @@
 <template>
-    <div class="create">
-        <div id="projects">
-            <button type="button" class="btn btn-outline-secondary" :class="{selected: active(author)}" v-for="author in authors" :key="author.id" @click="selectAuthor(author)">{{author.name}}</button>
+    <div class="create container">
+        <div class="mb-3">
+            <div id="projects">
+                <button type="button" class="btn btn-outline-secondary" :class="{selected: active(author)}" v-for="author in authors" :key="author.id" @click="selectAuthor(author)">{{author.name}}</button>
+            </div>
         </div>
-        <br>
-        <form @submit.prevent="createAuthor">
-            <input type="text" v-model="authorName">
+
+        <form class="mb-3" @submit.prevent="createAuthor">
+            <div>
+                <label class="form-label">Name:</label>
+                <input type="text" class="form-control" v-model="authorName">
+            </div>
             <br>
             <button type="submit" class="btn btn-primary">Create Author</button>
         </form>
-        <br>
-        <div v-if="author">
+
+        <div class="mb-3" v-if="author">
             <form @submit.prevent="createBlog">
-                <input type="text" v-model="blogTitle" placeholder="Title">
-                <br>
-                <input type="text" v-model="blogTag" placeholder="Tag">
-                <br>
-                <input type="file" name="photo" @change="fileChanged">
-                <br>
-                <textarea v-model="blogContent" placeholder="Add content..."></textarea>
-                <br>
+                <div class="mb-3">
+                    <label class="form-label">Title:</label>
+                    <input type="text" class="form-control" v-model="blogTitle">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Tag:</label>
+                    <input type="text" class="form-control" v-model="blogTag">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Main Picture:</label>
+                    <input type="file" name="photo" class="form-control" @change="fileChanged">
+                </div>
+
+                <div class="mb-3">
+                    <textarea v-model="blogContent" class="form-control" placeholder="Add content..."></textarea>
+                </div>
+
                 <button type="submit" class="btn btn-primary">Create Blog Post</button>
             </form>
-            <ul>
+            <!-- <ul>
                 <li v-for="blog in blogs" :key="blog.id">
                     <label :class="{ blog: true}">
                         {{ blog.title }}
                     </label>
                 </li>
-            </ul>
+            </ul> -->
         </div>
     </div>
 </template>
