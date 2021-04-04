@@ -89,7 +89,7 @@ data() {
                     });
                     await this.getAuthors();
                 } catch (error) {
-                    console.log(error);
+                    // console.log(error);
                 }
             },
 
@@ -114,7 +114,7 @@ data() {
                     this.blogContent = '';
                     this.getBlogs();
                 } catch (error) {
-                    console.log(error);
+                    // console.log(error);
                 }
             },
 
@@ -124,7 +124,7 @@ data() {
                     this.authors = response.data;
                     this.authorName = '';
                 } catch (error) {
-                    console.log(error);
+                    // console.log(error);
                 }
             },
 
@@ -145,7 +145,7 @@ data() {
                     const response = await axios.get(`/api/authors/${this.author._id}/blogs`);
                     this.blogs = response.data;
                 } catch (error) {
-                    console.log(error);
+                    // console.log(error);
                 }
             },
 

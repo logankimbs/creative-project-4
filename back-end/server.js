@@ -36,7 +36,7 @@ app.post('/api/authors', async (req, res) => {
         await author.save();
         res.send(author);
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         res.sendStatus(500);
     }
 });
@@ -47,7 +47,7 @@ app.get('/api/authors', async (req, res) => {
         let authors = await Author.find();
         res.send(authors);
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         res.sendStatus(500);
     }
 });
@@ -105,7 +105,7 @@ app.post('/api/authors/:authorID/blogs', async (req, res) => {
         await blog.save();
         res.send(blog);
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         res.sendStatus(500);
     }
 });
@@ -121,7 +121,7 @@ app.get('/api/authors/:authorID/blogs', async (req, res) => {
         let blogs = await Blog.find({author:author}).populate('author');
         res.send(blogs);
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         res.sendStatus(500);
     }
 });
@@ -140,7 +140,7 @@ app.put('/api/authors/:authorID/blogs/:blogID', async (req, res) => {
         blog.save();
         res.send(blog);
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         res.sendStatus(500);
     }
 });
@@ -156,7 +156,7 @@ app.delete('/api/authors/:authorID/blogs/:blogID', async (req, res) => {
         await blog.delete();
         res.sendStatus(200);
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         res.sendStatus(500);
     }
 });
