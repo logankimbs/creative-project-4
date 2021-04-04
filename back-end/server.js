@@ -54,11 +54,11 @@ app.get('/api/authors', async (req, res) => {
 
 // Configure multer so it will upload to '../front-end/public/images'
 const upload = multer({
-    dest: '../front-end/public/images/',
+    dest: '/var/www/cp4.logankimball.com/images/',
     limits: {
-        fileSize: 10000000
+      fileSize: 10000000
     }
-});
+  });
 
 app.post('/api/photos', upload.single('photo'), async (req, res) => {
     // Just a safety check
@@ -161,4 +161,4 @@ app.delete('/api/authors/:authorID/blogs/:blogID', async (req, res) => {
     }
 });
 
-app.listen(3000, () => console.log('Server listening on port 3000!'));
+app.listen(4000, () => console.log('Server listening on port 4000!'));
