@@ -6,6 +6,11 @@
         <router-link to="/edit">Edit</router-link>
     </div>
     <router-view/>
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container text-center">
+            <span class="text-muted"><a href="https://github.com/logankimbs/creative-project-4" target="blank">GitHub</a></span>
+        </div>
+    </footer>
 </div>
 </template>
 
@@ -28,5 +33,12 @@
 
 #nav a.router-link-exact-active {
     color: #42b983;
+}
+
+.footer {
+    position: absolute;
+    width: 100%;
+    height: 60px;
+    background-color: #f5f5f5;
 }
 </style>
