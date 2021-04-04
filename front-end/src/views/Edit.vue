@@ -167,11 +167,11 @@ data() {
                 this.toCreate = false;
             },
 
-            async updateBlog(currentBlog) {
+            async updateBlog(findBlog) {
                 try {
-                    await axios.put(`/api/authors/${currentBlog.author._id}/blogs`, {
-                        title: this.findItem.title,
-                        description: this.findItem.description,
+                    await axios.put(`/api/authors/${findBlog.author._id}/blogs/${findBlog._id}`, {
+                        title: this.findBlog.title,
+                        description: this.findBlog.description,
                         tag: this.findBlog.tag,
                         content: this.findBlog.content
                     });
@@ -184,14 +184,10 @@ data() {
             },
 
             async deleteBlog(findBlog) {
-                console.log(findBlog);
-                console.log(findBlog.author._id);
-                console.log(findBlog._id);
-
                 try {
                     await axios.delete(`/api/authors/${findBlog.author._id}/blogs/${findBlog._id}`);
                     this.findBlog = null;
-                    this.getBlog();
+                    this.getBlogs();
                     return true;
                 } catch (error) {
                     console.log(error);

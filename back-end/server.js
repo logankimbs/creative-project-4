@@ -126,7 +126,26 @@ app.get('/api/authors/:authorID/blogs', async (req, res) => {
     }
 });
 
-// Delete item in the museum
+// edit blog
+app.put('/api/authors/:authorID/blogs/:blogID', async (req, res) => {
+    try {
+        let blog = await Blog.findOne({_id:req.params.blogID, author: req.params.authorID});
+        if (!blog) {
+            res.send(404);
+            return;
+        }
+        blog.title = req.body.title;
+        blog.tag = req.body.tag;
+        blog.content = req.body.content;
+        blog.save();
+        res.send(blog);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
+
+// delete blog
 app.delete('/api/authors/:authorID/blogs/:blogID', async (req, res) => {
     try {
         let blog = await Blog.findOne({_id:req.params.blogID, author: req.params.authorID});
