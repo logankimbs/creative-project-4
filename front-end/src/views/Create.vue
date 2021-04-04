@@ -1,5 +1,6 @@
 <template>
     <div class="create container">
+        <h1>Create</h1>
         <div>
             <p>You can either choose an existing author or create a new one.</p>
             <div class="mb-3">
@@ -9,7 +10,7 @@
             </div>
             <form class="mb-3" @submit.prevent="createAuthor">
                 <div>
-                    <label class="form-label">Name:</label>
+                    <label class="form-label">New Author:</label>
                     <input type="text" class="form-control" v-model="authorName">
                 </div>
                 <br>
@@ -19,35 +20,28 @@
         <div class="mb-3" v-if="author">
             <form @submit.prevent="createBlog">
                 <div class="mb-3">
+                    <label class="form-label">Author</label>
+                    <input type="text" class="form-control" :value="this.author.name" disabled>
+                </div>
+                <div class="mb-3">
                     <label class="form-label">Title:</label>
                     <input type="text" class="form-control" v-model="blogTitle">
                 </div>
-
                 <div class="mb-3">
                     <label class="form-label">Tag:</label>
                     <input type="text" class="form-control" v-model="blogTag">
                 </div>
-
                 <div class="mb-3">
                     <label class="form-label">Main Picture:</label>
                     <input type="file" name="photo" class="form-control" @change="fileChanged">
                 </div>
-
                 <div class="mb-3">
                     <textarea v-model="blogContent" class="form-control" placeholder="Add content..."></textarea>
                 </div>
-
                 <button type="submit" class="btn btn-primary">Create Blog Post</button>
             </form>
         </div>
     </div>
-<!-- <ul>
-    <li v-for="blog in blogs" :key="blog.id">
-        <label :class="{ blog: true}">
-            {{ blog.title }}
-        </label>
-    </li>
-</ul> -->
 </template>
 
 <script>
@@ -67,11 +61,6 @@ data() {
                 blogContent: '',
                 show: 'all',
                 file: null,
-                showOptions: true,
-                toCreate: null,
-                toEdit: null,
-                editBlog: null,
-                findBlog: "",
             }
         },
         
@@ -120,8 +109,9 @@ data() {
                         content: this.blogContent,
                         timeStamp: moment().format('MMMM Do YYYY')
                     });
-                    this.title = '';
-                    this.content = '';
+                    this.blogTitle = '';
+                    this.blogTag = '';
+                    this.blogContent = '';
                     this.getBlogs();
                 } catch (error) {
                     console.log(error);

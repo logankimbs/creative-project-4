@@ -126,4 +126,20 @@ app.get('/api/authors/:authorID/blogs', async (req, res) => {
     }
 });
 
+// Delete item in the museum
+app.delete('/api/authors/:authorID/blogs/:blogID', async (req, res) => {
+    try {
+        let blog = await Blog.findOne({_id:req.params.blogID, author: req.params.authorID});
+        if (!blog) {
+            res.send(404);
+            return;
+        }
+        await blog.delete();
+        res.sendStatus(200);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
+
 app.listen(3000, () => console.log('Server listening on port 3000!'));

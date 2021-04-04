@@ -1,83 +1,39 @@
 <template>
-    <div class="create container">
-        <div>
-            <p>You can either choose an existing author or create a new one.</p>
-            <div class="mb-3">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-outline-secondary btn-sm" v-for="author in authors" :key="author.id" @click="selectAuthor(author)">{{author.name}}</button>
-                </div>
-            </div>
-            <form class="mb-3" @submit.prevent="createAuthor">
-                <div>
-                    <label class="form-label">Name:</label>
-                    <input type="text" class="form-control" v-model="authorName">
-                </div>
-                <br>
-                <button type="submit" class="btn btn-primary">Create Author</button>
-            </form>
-        </div>
-        <div>
-            <p>Choose an author whos blog you would like to edit.</p>
-            <div class="mb-3">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-outline-secondary btn-sm" v-for="author in authors" :key="author.id" @click="selectAuthorsBlog(author)">{{author.name}}</button>
-                </div>
+    <div class="edit container">
+        <h1>Edit</h1>
+        <p>Choose an author whos blog you would like to edit.</p>
+        <div class="mb-3">
+            <div class="btn-group">
+                <button type="button" class="btn btn-outline-secondary btn-sm" v-for="author in authors" :key="author.id" @click="selectAuthor(author)">{{author.name}}</button>
             </div>
         </div>
-
         <div class="mb-3" v-if="author">
-            <form @submit.prevent="createBlog">
-                <div class="mb-3">
-                    <label class="form-label">Title:</label>
-                    <input type="text" class="form-control" v-model="blogTitle">
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Tag:</label>
-                    <input type="text" class="form-control" v-model="blogTag">
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Main Picture:</label>
-                    <input type="file" name="photo" class="form-control" @change="fileChanged">
-                </div>
-
-                <div class="mb-3">
-                    <textarea v-model="blogContent" class="form-control" placeholder="Add content..."></textarea>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Create Blog Post</button>
-            </form>
+            <p>Which of their blogs would you like to edit?</p>
+            <div v-for="blog in blogs" :key="blog.id">
+                <button type="button" class="btn btn-outline-success btn-sm mb-1" @click="selectBlog(blog)">{{blog.title}}</button> 
+            </div>
         </div>
-
-        <div class="edit">
-            <div class="form">
-                <input v-model="findBlog" placeholder="Search">
-                    <div class="suggestions" v-if="suggestions.length > 0">
-                        <div class="suggestion" v-for="sugesstion in suggestions" :key="sugesstion.id" @click="selectBlog(sugesstion)">{{   sugesstion.title   }}</div>
-                    </div>
+        <div v-if="findBlog">
+            <div class="mb-3">
+                <label class="form-label">Author</label>
+                <input type="text" class="form-control" :value="this.author.name" disabled>
             </div>
-
-            <div class="upload" v-if="findBlog">
-                <input v-model="findBlog.title">
-                <p></p>
-                
-                <textarea v-model="findBlog.content"></textarea>
+            <div class="mb-3">
+                <label class="form-label">Title:</label>
+                <input type="text" class="form-control" v-model="findBlog.title">
             </div>
-
-            <div class="actions" v-if="findBlog">
-                <button @click="deleteItem(findBlog)">Delete</button>
-                <button @click="editItem(findBlog)">Edit</button>
+            <div class="mb-3">
+                <label class="form-label">Tag:</label>
+                <input type="text" class="form-control" v-model="findBlog.tag">
             </div>
+            <div class="mb-3">
+                <textarea v-model="findBlog.content" class="form-control" placeholder="Add content..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary mb-1" @click="updateBlog(findBlog)">Update Blog Post</button>
+            <br>
+            <button type="submit" class="btn btn-danger" @click="deleteBlog(findBlog)">DeleteBlog Post</button>
         </div>
     </div>
-<!-- <ul>
-    <li v-for="blog in blogs" :key="blog.id">
-        <label :class="{ blog: true}">
-            {{ blog.title }}
-        </label>
-    </li>
-</ul> -->
 </template>
 
 <script>
@@ -97,11 +53,7 @@ data() {
                 blogContent: '',
                 show: 'all',
                 file: null,
-                showOptions: true,
-                toCreate: null,
-                toEdit: null,
-                editBlog: null,
-                findBlog: "",
+                findBlog: null
             }
         },
         
@@ -171,7 +123,12 @@ data() {
             selectAuthor(author) {
                 this.author = author;
                 this.noCreate = false;
+                this.findBlog = null;
                 this.getBlogs();
+            },
+
+            selectBlog(blog) {
+                this.findBlog = blog; 
             },
 
             selectAuthorsBlog(author) {
@@ -210,16 +167,36 @@ data() {
                 this.toCreate = false;
             },
 
-            async deleteItem(item) {
-            try {
-                await axios.delete("/api/items/" + item._id);
-                this.findBlog = null;
-                this.getBlog();
-                return true;
-            } catch (error) {
-                // console.log(error);
+            async updateBlog(currentBlog) {
+                try {
+                    await axios.put(`/api/authors/${currentBlog.author._id}/blogs`, {
+                        title: this.findItem.title,
+                        description: this.findItem.description,
+                        tag: this.findBlog.tag,
+                        content: this.findBlog.content
+                    });
+                    this.findBlog = null;
+                    this.getBlogs();
+                    return true;
+                } catch (error) {
+                    console.log(error);
+                }
+            },
+
+            async deleteBlog(findBlog) {
+                console.log(findBlog);
+                console.log(findBlog.author._id);
+                console.log(findBlog._id);
+
+                try {
+                    await axios.delete(`/api/authors/${findBlog.author._id}/blogs/${findBlog._id}`);
+                    this.findBlog = null;
+                    this.getBlog();
+                    return true;
+                } catch (error) {
+                    console.log(error);
+                }
             }
-        },
         }
     }
 </script>
