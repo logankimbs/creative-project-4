@@ -1,20 +1,26 @@
 <template>
-    <div class="home">
-        <div id="projects">
-            <button type="button" class="btn btn-outline-secondary" :class="{selected: active(author)}" v-for="author in authors" :key="author.id" @click="selectAuthor(author)">{{author.name}}</button>
+    <div class="home container">
+        <p>Select favorite author:</p>
+        <div class="btn-group mb-4" role="group">
+            <button type="button" class="btn btn-outline-secondary btn-sm" @click="selectAuthor()">All</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" v-for="author in authors" :key="author.id" @click="selectAuthor(author)">{{author.name}}</button>
         </div>
         <br>
+
         <div v-if="author">
             <div v-for="blog in blogs" :key="blog.id">
-                <div class="postcard-wrapper">
-                    <div class="author">{{   blog.author.name   }}</div>
-                    <div class="timestamp">{{   blog.timeStamp   }}</div>
-                    <div class="postcard">
-                        <div class="title">{{   blog.title   }}</div>
-                        <img class="thumbnail" :src="blog.path">
-                        <p class="content">{{   blog.content   }}</p>
+                <div class="card border-light mb-3">
+                    <div class="card-header">{{blog.author.name}}
+                        <br>
+                        <small class="text-muted">{{blog.timeStamp}}</small>
                     </div>
-                    <div class="tag">{{   blog.tag   }}</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{blog.title}}</h5>
+                        <img src="../assets/code.png" width="100%">
+                        <p class="card-text">{{blog.content}}</p>
+                        <br>
+                        <span class="badge bg-primary">{{blog.tag}}</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -23,7 +29,6 @@
 
 <script>
     import axios from 'axios';
-    import moment from 'moment';
 
     export default {
         name: 'Home',
@@ -36,60 +41,15 @@
                 blogs: [],
                 blogTitle: '',
                 blogTag: '',
-                blogContent: '',
-                show: 'all',
-                file: null
+                blogContent: ''
             }
         },
         
         created() {
             this.getAuthors();
         },
-
-        computed: {
-            activeBlogs() {
-                return this.blogs.filter(blog => {
-                    return blog;
-                });
-            }
-        },
         
         methods: {
-            async createAuthor() {
-                try {
-                    await axios.post("/api/authors", {
-                        name: this.authorName
-                    });
-                    await this.getAuthors();
-                } catch (error) {
-                    console.log(error);
-                }
-            },
-
-            fileChanged(event) {
-                this.file = event.target.files[0];
-            },
-
-            async createBlog() {
-                try {
-                    const formData = new FormData();
-                    formData.append('photo', this.file, this.file.name);
-                    let r1 = await axios.post('/api/photos', formData);
-                    await axios.post(`/api/authors/${this.author._id}/blogs`, {
-                        title: this.blogTitle,
-                        tag: this.blogTag,
-                        path: r1.data.path,
-                        content: this.blogContent,
-                        timeStamp: moment().format('MMMM Do YYYY')
-                    });
-                    this.title = '';
-                    this.content = '';
-                    this.getBlogs();
-                } catch (error) {
-                    console.log(error);
-                }
-            },
-
             async getAuthors() {
                 try {
                     const response = await axios.get("/api/authors");
@@ -98,11 +58,6 @@
                 } catch (error) {
                     console.log(error);
                 }
-            },
-
-            selectAuthor(author) {
-                this.author = author;
-                this.getBlogs();
             },
 
             async getBlogs() {
@@ -114,13 +69,15 @@
                 }
             },
 
-            active(author) {
-                return (this.author && author._id === this.author._id);
+            selectAuthor(author) {
+                this.author = author;
+                this.getBlogs();
+                // Change style of button
             },
 
-            showActive() {
-                this.show = 'active';
-            },
+            active(author) {
+                return (this.author && author._id === this.author._id);
+            }
         }
     }
 </script>

@@ -16,6 +16,15 @@
                 <button type="submit" class="btn btn-primary">Create Author</button>
             </form>
         </div>
+        <div>
+            <p>Choose an author whos blog you would like to edit.</p>
+            <div class="mb-3">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" v-for="author in authors" :key="author.id" @click="selectAuthorsBlog(author)">{{author.name}}</button>
+                </div>
+            </div>
+        </div>
+
         <div class="mb-3" v-if="author">
             <form @submit.prevent="createBlog">
                 <div class="mb-3">
@@ -39,6 +48,27 @@
 
                 <button type="submit" class="btn btn-primary">Create Blog Post</button>
             </form>
+        </div>
+
+        <div class="edit">
+            <div class="form">
+                <input v-model="findBlog" placeholder="Search">
+                    <div class="suggestions" v-if="suggestions.length > 0">
+                        <div class="suggestion" v-for="sugesstion in suggestions" :key="sugesstion.id" @click="selectBlog(sugesstion)">{{   sugesstion.title   }}</div>
+                    </div>
+            </div>
+
+            <div class="upload" v-if="findBlog">
+                <input v-model="findBlog.title">
+                <p></p>
+                
+                <textarea v-model="findBlog.content"></textarea>
+            </div>
+
+            <div class="actions" v-if="findBlog">
+                <button @click="deleteItem(findBlog)">Delete</button>
+                <button @click="editItem(findBlog)">Edit</button>
+            </div>
         </div>
     </div>
 <!-- <ul>

@@ -110,7 +110,7 @@ app.post('/api/authors/:authorID/blogs', async (req, res) => {
     }
 });
 
-// read blogs
+// read blogs by author
 app.get('/api/authors/:authorID/blogs', async (req, res) => {
     try {
         let author = await Author.findOne({_id: req.params.authorID});
